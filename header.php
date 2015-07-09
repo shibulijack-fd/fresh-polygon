@@ -27,26 +27,42 @@
 	<!--[if lt IE 9]>
 	<script src="<?php echo get_template_directory_uri(); ?>/js/html5.js"></script>
 	<![endif]-->
+	<!--
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="<?php echo get_template_directory_uri(); ?>/js/waypoints.js"></script>
+	<script src="<?php echo get_template_directory_uri(); ?>/js/all.js"></script>-->
 	<?php wp_head(); ?>
 </head>
 
 <body <?php body_class(); ?>>
 	<div id="page" class="hfeed site">
-		<header id="masthead" class="site-header" role="banner">
-			<div id="navbar" class="navbar">
-				<nav id="site-navigation" class="navigation main-navigation" role="navigation">
-					<button class="menu-toggle"><?php _e( 'Menu', 'twentythirteen' ); ?></button>
-					<a class="screen-reader-text skip-link" href="#content" title="<?php esc_attr_e( 'Skip to content', 'twentythirteen' ); ?>"><?php _e( 'Skip to content', 'twentythirteen' ); ?></a>
-					<?php wp_nav_menu( array( 'theme_location' => 'primary', 'menu_class' => 'nav-menu', 'menu_id' => 'primary-menu' ) ); ?>
-					<?php get_search_form(); ?>
-				</nav><!-- #site-navigation -->
+		<header id="masthead" class="fd-header" role="banner">
+			<div id="navbar" class="top-nav-strip">
+				<div class="l-page">
+					<nav id="site-navigation" class="top-site-nav" role="navigation">
+						<!-- <button class="menu-toggle"><?php _e( 'Menu', 'twentythirteen' ); ?></button> -->
+						<!-- <a class="screen-reader-text skip-link" href="#content" title="<?php esc_attr_e( 'Skip to content', 'twentythirteen' ); ?>"><?php _e( 'Skip to content', 'twentythirteen' ); ?></a> -->
+						<?php wp_nav_menu( array( 'theme_location' => 'primary', 'menu_class' => 'nav-menu', 'menu_id' => 'primary-menu' ) ); ?>
+						<?php //get_search_form(); ?>
+					</nav><!-- #site-navigation -->
+				</div><!-- #l-page -->
 			</div><!-- #navbar -->
-			<a class="home-link" href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
-				<h1 class="site-title"><?php bloginfo( 'name' ); ?></h1>
-				<h2 class="site-description"><?php bloginfo( 'description' ); ?></h2>
-			</a>
+			<div class="header fd-sticky fc">
+				<div class="sticky-wrapper" style="height: 58px;"><section class="fd-home-sticky" style="width: 1280px;">
+					<div class="l-page"> 
+						<a href="/" class="fd-logo"></a>
+						<button class="show-in-mobile menu-icon"></button>
+						<nav class="site-nav">
+							<?php $walker = new Menu_With_Description; ?>
+							<?php wp_nav_menu( array( 'theme_location' => 'secondary', 'menu_class' => 'nav-menu', 'menu_id' => 'main-menu' , 'walker' => $walker) ); ?>
+						</nav>
+					</div>
+				</section></div>
+			</div>
 
 			
 		</header><!-- #masthead -->
+
+
 
 		<div id="main" class="site-main">

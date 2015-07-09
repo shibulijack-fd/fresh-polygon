@@ -94,7 +94,11 @@ function twentythirteen_setup() {
 	) );
 
 	// This theme uses wp_nav_menu() in one location.
-	register_nav_menu( 'primary', __( 'Navigation Menu', 'twentythirteen' ) );
+	register_nav_menus( array(
+	    'primary' => __( 'Navigation Menu', 'twentythirteen'),
+	    'secondary' => __( 'Main Menu', 'twentythirteen' ),
+	    'tour' => __( 'Tour Menu', 'twentythirteen' )
+	 ) );
 
 	/*
 	 * This theme uses a custom image size for featured images, displayed on
@@ -166,8 +170,8 @@ function twentythirteen_scripts_styles() {
 		wp_enqueue_script( 'comment-reply' );
 
 	// Adds Masonry to handle vertical alignment of footer widgets.
-	if ( is_active_sidebar( 'sidebar-1' ) )
-		wp_enqueue_script( 'jquery-masonry' );
+	// if ( is_active_sidebar( 'sidebar-1' ) )
+	// 	wp_enqueue_script( 'jquery-masonry' );
 
 	// Loads JavaScript file with functionality specific to Twenty Thirteen.
 	wp_enqueue_script( 'twentythirteen-script', get_template_directory_uri() . '/js/functions.js', array( 'jquery' ), '20150330', true );
@@ -550,3 +554,100 @@ function twentythirteen_customize_preview_js() {
 	wp_enqueue_script( 'twentythirteen-customizer', get_template_directory_uri() . '/js/theme-customizer.js', array( 'customize-preview' ), '20141120', true );
 }
 add_action( 'customize_preview_init', 'twentythirteen_customize_preview_js' );
+
+/* CJ Custom filters */
+remove_filter( 'the_content', 'wpautop' );
+remove_filter( 'the_excerpt', 'wpautop' );
+
+add_action( 'wp_enqueue_scripts', 'add_FD_script' );
+function add_FD_script() {
+   wp_enqueue_script(
+        'waypoint-script', 
+        get_template_directory_uri() . '/js/waypoints.js', 
+        array('jquery') 
+    );
+    wp_enqueue_script(
+        'fd-script', 
+        get_template_directory_uri() . '/js/all.js', 
+        array('waypoint-script','jquery') 
+    );
+}
+
+class Menu_With_Description extends Walker_Nav_Menu {
+	function start_el(&$output, $item, $depth=0, $args=array(),$id=0) {
+		global $wp_query;
+		$indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
+		
+		$class_names = $value = '';
+
+		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
+
+		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) );
+		$class_names = ' class="' . esc_attr( $class_names ) . '"';
+
+		$output .= $indent . '<li id="menu-item-'. $item->ID . '"' . $value . $class_names .'>';
+
+		$attributes = ! empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) .'"' : '';
+		$attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target ) .'"' : '';
+		$attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) .'"' : '';
+		$attributes .= ! empty( $item->url ) ? ' href="' . esc_attr( $item->url ) .'"' : '';
+		$attributes .= ! empty( $item->attr_title ) ? ' id="' . esc_attr( $item->attr_title ) .'"' : '';
+
+		$item_output = $args->before;
+		$item_output .= '<a'. $attributes .'>';
+		$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
+		$item_output .= '<span class="nav-menu-info muted">' . $item->description . '</span>';
+		$item_output .= '</a>';
+		$item_output .= $args->after;
+
+		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args,$id);
+	}
+}
+
+class Menu_Tour extends Walker_Nav_Menu {
+	function start_el(&$output, $item, $depth=0, $args=array(),$id=0) {
+		global $wp_query;
+		$indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
+		
+		$class_names = $value = '';
+
+		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
+
+		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) );
+		$class_names = ' class="' . esc_attr( $class_names ) . '"';
+
+		$output .= $indent . '<li rel="'. esc_attr( $item->url ) .'">';
+
+		$attributes = ! empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) .'"' : '';
+		$attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target ) .'"' : '';
+		$attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) .'"' : '';
+		$attributes .= ! empty( $item->url ) ? ' href="' . esc_attr( $item->url ) .'"' : '';
+		$attributes .=  ' class="tour-scroll" ' ;
+		$attributes .=  ' data-pjax="#tour-append" ' ;
+
+		$item_output = $args->before;
+		$item_output .= '<a'. $attributes .'>';
+		// $item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
+		$item_output .= '<i class="icon-' . $item->description . '"></i>';
+		$item_output .= '<span class="icon-tour-title">' . $item->title . '</span>';
+		$item_output .= '</a>';
+		$item_output .= $args->after;
+
+		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args,$id);
+	}
+}
+add_filter( 'wp_nav_menu_items', 'tour_bottom_bar', 10, 2 );
+function tour_bottom_bar ( $items, $args ) {
+	$output='';
+    if ($args->theme_location == 'tour') {
+    	$first_a='<a href="/" class="tour-fd-logo"></a>';
+    	$output.=$first_a;
+    	$output.=$items;
+    	$last_a='<a href="/signup" class="btn tour-nav-signup">Sign Up</a>';
+       	$output.=$last_a;
+       	$last_li= '<li class="bottom-bar"></li>';
+       	$output.=$last_li;
+       	$items=$output;
+    }
+    return $items;
+}

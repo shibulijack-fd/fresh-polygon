@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="61.514px" height="45.939px" viewBox="0 0 61.514 45.939" enable-background="new 0 0 61.514 45.939" xml:space="preserve">
+<g id="Mail_1_">
+	<path opacity="0.2" fill="#010101" d="M61.512,41.943c0,2.207-1.785,3.996-3.986,3.996H4.011c-2.201,0-3.985-1.789-3.985-3.996
+		V5.41c0-2.207,1.785-3.996,3.985-3.996h53.515c2.201,0,3.986,1.789,3.986,3.996V41.943z"/>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="0" y1="22.2627" x2="61.4868" y2="22.2627">
+		<stop  offset="0.9" style="stop-color:#E8E7DF"/>
+		<stop  offset="1" style="stop-color:#E9E7DA"/>
+	</linearGradient>
+	<path fill="url(#SVGID_1_)" d="M61.487,40.531c0,2.207-1.785,3.994-3.986,3.994H3.985C1.784,44.525,0,42.738,0,40.531V3.996
+		C0,1.789,1.784,0,3.985,0H57.5c2.201,0,3.986,1.789,3.986,3.996V40.531z"/>
+	<path fill="#CCC9BD" d="M3.993,44.525h2.528L30.77,27.541L0.008,5.994v34.537C0.008,42.738,1.792,44.525,3.993,44.525z"/>
+	<path fill="#B7B6AB" d="M55.012,44.514H57.5c2.201,0,3.986-1.789,3.986-3.996V6.008l-30.723,21.52L55.012,44.514z"/>
+	<path fill="#C0BFB4" d="M6.494,44.529h48.499L30.745,27.543L6.494,44.529z"/>
+	<path id="Shadow" opacity="0.2" fill="#010101" d="M60.956,6.584L60.956,6.584 M0.008,5.994L30.43,33.842L60.956,6.584
+		L30.77,27.541L0.008,5.994"/>
+</g>
+</svg>

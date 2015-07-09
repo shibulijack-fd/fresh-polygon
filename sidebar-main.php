@@ -10,9 +10,10 @@
  */
 
 if ( is_active_sidebar( 'sidebar-1' ) ) : ?>
-	<div id="secondary" class="sidebar-container" role="complementary">
-		<div class="widget-area">
+	<div id="secondary" class="l-page clearfix footer-wrapper" role="complementary">
+
 			<?php dynamic_sidebar( 'sidebar-1' ); ?>
-		</div><!-- .widget-area -->
+
+		<!-- .widget-area -->
 	</div><!-- #secondary -->
 <?php endif; ?>

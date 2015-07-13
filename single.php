@@ -9,6 +9,13 @@
 
 get_header(); ?>
 
+ <div class="banner">
+        <div class="l-page no-clear align-center">
+            <h2 class="s-heading"><?php echo the_title(); ?></h2>
+        </div>
+    </div>
+
+<div class="l-page fc">
 	<div id="primary" class="content-area">
 		<div id="content" class="site-content" role="main">
 
@@ -16,13 +23,13 @@ get_header(); ?>
 			<?php while ( have_posts() ) : the_post(); ?>
 
 				<?php get_template_part( 'content', get_post_format() ); ?>
-				<?php twentythirteen_post_nav(); ?>
-				<?php comments_template(); ?>
+				<?php #twentythirteen_post_nav(); ?>
+				<?php #comments_template(); ?>
 
 			<?php endwhile; ?>
 
 		</div><!-- #content -->
 	</div><!-- #primary -->
-
-<?php get_sidebar(); ?>
+</div>
+<?php #get_sidebar(); ?>
 <?php get_footer(); ?>

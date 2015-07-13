@@ -16,6 +16,12 @@
 
 get_header(); ?>
 
+ <div class="banner">
+        <div class="l-page no-clear align-center">
+            <h2 class="s-heading"><?php echo the_title(); ?></h2>
+        </div>
+    </div>
+
 	<div id="primary" class="content-area">
 		<div id="content" class="site-content" role="main">
 		<?php if ( have_posts() ) : ?>

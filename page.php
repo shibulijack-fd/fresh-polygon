@@ -12,7 +12,13 @@
  */
 
 get_header(); ?>
+ <div class="banner">
+        <div class="l-page no-clear align-center">
+            <h2 class="s-heading"><?php echo the_title(); ?></h2>
+        </div>
+    </div>
 
+<div class="l-page fc">
 	<div id="primary" class="content-area">
 		<div id="content" class="site-content" role="main">
 
@@ -27,7 +33,6 @@ get_header(); ?>
 						</div>
 						<?php endif; ?>
 
-						<h1 class="entry-title"><?php the_title(); ?></h1>
 					</header><!-- .entry-header -->
 
 					<div class="entry-content">
@@ -35,16 +40,14 @@ get_header(); ?>
 						<?php wp_link_pages( array( 'before' => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'twentythirteen' ) . '</span>', 'after' => '</div>', 'link_before' => '<span>', 'link_after' => '</span>' ) ); ?>
 					</div><!-- .entry-content -->
 
-					<footer class="entry-meta">
-						<?php edit_post_link( __( 'Edit', 'twentythirteen' ), '<span class="edit-link">', '</span>' ); ?>
-					</footer><!-- .entry-meta -->
+					
 				</article><!-- #post -->
 
-				<?php comments_template(); ?>
+				<?php #comments_template(); ?>
 			<?php endwhile; ?>
 
 		</div><!-- #content -->
 	</div><!-- #primary -->
-
-<?php get_sidebar(); ?>
+</div>
+<?php #get_sidebar(); ?>
 <?php get_footer(); ?>

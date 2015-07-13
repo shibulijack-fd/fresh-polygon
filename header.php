@@ -42,15 +42,16 @@
 					<nav id="site-navigation" class="top-site-nav" role="navigation">
 						<!-- <button class="menu-toggle"><?php _e( 'Menu', 'twentythirteen' ); ?></button> -->
 						<!-- <a class="screen-reader-text skip-link" href="#content" title="<?php esc_attr_e( 'Skip to content', 'twentythirteen' ); ?>"><?php _e( 'Skip to content', 'twentythirteen' ); ?></a> -->
-						<?php wp_nav_menu( array( 'theme_location' => 'primary', 'menu_class' => 'nav-menu', 'menu_id' => 'primary-menu' ) ); ?>
+                        <?php $walker = new Menu_Navigation_Top; ?>
+						<?php wp_nav_menu( array( 'theme_location' => 'primary', 'menu_class' => 'nav-menu', 'menu_id' => 'primary-menu', 'walker' => $walker ) ); ?>
 						<?php //get_search_form(); ?>
 					</nav><!-- #site-navigation -->
 				</div><!-- #l-page -->
 			</div><!-- #navbar -->
 			<div class="header fd-sticky fc">
-				<div class="sticky-wrapper" style="height: 58px;"><section class="fd-home-sticky" style="width: 1280px;">
+				<div class="sticky-wrapper" style="height: 58px;"><section class="fd-home-sticky">
 					<div class="l-page"> 
-						<a href="/" class="fd-logo"></a>
+						<a href="<?php echo get_site_url(); ?>" class="fd-logo"></a>
 						<button class="show-in-mobile menu-icon"></button>
 						<nav class="site-nav">
 							<?php $walker = new Menu_With_Description; ?>

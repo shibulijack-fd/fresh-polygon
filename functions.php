@@ -97,7 +97,9 @@ function twentythirteen_setup() {
 	register_nav_menus( array(
 	    'primary' => __( 'Navigation Menu', 'twentythirteen'),
 	    'secondary' => __( 'Main Menu', 'twentythirteen' ),
-	    'tour' => __( 'Tour Menu', 'twentythirteen' )
+	    'tour' => __( 'Tour Menu', 'twentythirteen' ),
+        'about' => __( 'About Menu', 'twentythirteen' ),
+        'error' => __( 'Error Menu', 'twentythirteen' )
 	 ) );
 
 	/*
@@ -566,11 +568,48 @@ function add_FD_script() {
         get_template_directory_uri() . '/js/waypoints.js', 
         array('jquery') 
     );
+     wp_enqueue_script(
+        'pjax-script', 
+        get_template_directory_uri() . '/js/jquery.pjax.js', 
+        array('jquery') 
+    );
     wp_enqueue_script(
         'fd-script', 
         get_template_directory_uri() . '/js/all.js', 
         array('waypoint-script','jquery') 
     );
+}
+
+class Menu_Navigation_Top extends Walker_Nav_Menu {
+	function start_el(&$output, $item, $depth=0, $args=array(),$id=0) {
+		global $wp_query;
+		$indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
+		
+		$class_names = $value = $list_id = '';
+
+		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
+
+		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) );
+		$class_names = ' class="' . esc_attr( $class_names ) . '"';
+        
+        $list_id = ! empty( $item->attr_title ) ?  esc_attr( $item->attr_title ) : 'menu-item-'. $item->ID;
+		$output .= $indent . '<li id="'. $list_id . '"' . $value . $class_names .'>';
+
+		$attributes = ! empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) .'"' : '';
+		$attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target ) .'"' : '';
+		$attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) .'"' : '';
+		$attributes .= ! empty( $item->url ) ? ' href="' . esc_attr( $item->url ) .'"' : '';
+		$attributes .= ! empty( $item->attr_title ) ? ' id="' . esc_attr( $item->attr_title ) .'"' : '';
+
+		$item_output = $args->before;
+		$item_output .= '<a'. $attributes .'>';
+		$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
+		$item_output .= '<span class="nav-menu-info muted">' . $item->description . '</span>';
+		$item_output .= '</a>';
+		$item_output .= $args->after;
+
+		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args,$id);
+	}
 }
 
 class Menu_With_Description extends Walker_Nav_Menu {
@@ -636,6 +675,7 @@ class Menu_Tour extends Walker_Nav_Menu {
 		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args,$id);
 	}
 }
+
 add_filter( 'wp_nav_menu_items', 'tour_bottom_bar', 10, 2 );
 function tour_bottom_bar ( $items, $args ) {
 	$output='';

@@ -2545,7 +2545,7 @@ function getParameterByName(name){
 		$('.sticky-header').waypoint('sticky');
 		$('.sticky-sidebar').waypoint('sticky', {
 			wrapper: '<div class="sticky-sidebar-wrapper" />',
-			offset: "60px"
+			offset: "65px"
 		});
 
 		$('.tour-sticky').waypoint('sticky', {
@@ -4134,6 +4134,7 @@ try{
 	$(document).pjax('a[data-pjax]', '#tour-append');
 	$('#tour-append')
 		.on('pjax:start', function (xhr, options) {
+        debugger;
 			slide_pos = $('[rel="'+ window.location.href +'"]').index() - 1;
 			changeIt();
 			$('#tour-append')
@@ -4201,6 +4202,7 @@ try{
 	        	clearInterval( slide_int );          
             	slide_pos = 0;
 	        }
+            changeIt();
 	    })
 	    
 	    $prev.click(function(){
@@ -4216,6 +4218,7 @@ try{
             		slide_pos--;
             	}
 	        }
+             changeIt();
 	    })
 	});
 

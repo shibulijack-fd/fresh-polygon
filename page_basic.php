@@ -23,9 +23,7 @@ get_header(); ?>
 						<?php wp_link_pages( array( 'before' => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'twentythirteen' ) . '</span>', 'after' => '</div>', 'link_before' => '<span>', 'link_after' => '</span>' ) ); ?>
 					</div><!-- .entry-content -->
 
-					<div class="entry-meta">
-						<?php edit_post_link( __( 'Edit', 'twentythirteen' ), '<span class="edit-link">', '</span>' ); ?>
-					</div><!-- .entry-meta -->
+					
 				</article><!-- #post -->
 
 			<?php endwhile; ?>

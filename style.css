@@ -10336,6 +10336,26 @@ a:active {
 .right-panel {
     padding-top: 10px;
     padding-bottom: 50px;
+    margin-bottom: 100px;
+}
+#sitemap {
+    margin-top: 20px;
+}
+ #sitemap .page_item_has_children {
+     
+ }
+  #sitemap a, #sitemap a:visited  {
+        color:  #333333;
+}
+ #sitemap a:hover  {
+        color:  #555555;
+}
+ #sitemap .children a {
+     color:  #18ad90;
+     padding-left: 20px;
+ }
+#sitemap .children a:hover {
+    color: #395b54;
 }
 .stuck {
     position: fixed;

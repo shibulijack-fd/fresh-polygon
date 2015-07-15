@@ -173,7 +173,7 @@ function twentythirteen_scripts_styles() {
 
 	// Adds Masonry to handle vertical alignment of footer widgets.
 	// if ( is_active_sidebar( 'sidebar-1' ) )
-	// 	wp_enqueue_script( 'jquery-masonry' );
+	wp_enqueue_script( 'jquery-masonry' );
 
 	// Loads JavaScript file with functionality specific to Twenty Thirteen.
 	wp_enqueue_script( 'twentythirteen-script', get_template_directory_uri() . '/js/functions.js', array( 'jquery' ), '20150330', true );

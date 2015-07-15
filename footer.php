@@ -19,7 +19,7 @@
 			<ul class="clearfix">
 				<li><a href="http://freshdesk.com/terms">TERMS OF SERVICE</a></li>
 				<li><a href="http://freshdesk.com/privacy">PRIVACY POLICY</a></li>
-				<li><a href="http://freshdesk.com/sitemap">SITEMAP</a></li>
+				<li><a href="<?php echo get_site_url(); ?>/sitemap">SITEMAP</a></li>
 			</ul>
 		</div>
 		<div class="fg-5 omega copy">

@@ -305,7 +305,7 @@ p,
 .pl-features p,
 .pricing-articles p,
 .pricing-articles a,
-.freshservice-intro h5,
+.freshservice-intro span.description,
 .banner-demo,
 .tour-content-wrapper p,
 .tour-widget p,
@@ -10000,7 +10000,7 @@ body {
 .phone-pricing .home-banner:hover .pricing-txt,
 .home-banner:hover .pricing-articles a,
 .pricing-articles .home-banner:hover a,
-.home-banner:hover .freshservice-intro h5,
+.home-banner:hover .freshservice-intro span.description,
 .freshservice-intro .home-banner:hover h5,
 .home-banner:hover .banner-demo,
 .home-banner:hover .team-desc-wrapper .team-panel h6,
@@ -10338,25 +10338,7 @@ a:active {
     padding-bottom: 50px;
     margin-bottom: 100px;
 }
-#sitemap {
-    margin-top: 20px;
-}
- #sitemap .page_item_has_children {
-     
- }
-  #sitemap a, #sitemap a:visited  {
-        color:  #333333;
-}
- #sitemap a:hover  {
-        color:  #555555;
-}
- #sitemap .children a {
-     color:  #18ad90;
-     padding-left: 20px;
- }
-#sitemap .children a:hover {
-    color: #395b54;
-}
+
 .stuck {
     position: fixed;
     z-index: 13;
@@ -10423,6 +10405,8 @@ img.loading {
 }
 .breadcrumb {
     padding-top: 20px;
+    font-size: 14px;
+    color: #ccc;
 }
 .breadcrumb-sep {
     color: #ccc;
@@ -15837,7 +15821,7 @@ p.pl-features-link a {
 .freshservice-intro .l-page {
     display: block;
 }
-.freshservice-intro h5 {
+.freshservice-intro span.description {
     margin: 0;
     color: #018ba7;
 }
@@ -16054,7 +16038,7 @@ p.pl-features-link a {
     padding-bottom: 20px;
     display: block;
 }
-.home-tour-wrapper .home-tour-link .tour-link-content h3 {
+.home-tour-wrapper .home-tour-link .tour-link-content span.tour-link-desc {
     font-size: 42px;
     font-weight: 300;
 }
@@ -20387,7 +20371,7 @@ div#usa {
     .home-tour-wrapper .home-tour-link .tour-link-content {
         margin-right: 20px;
     }
-    .home-tour-wrapper .home-tour-link .tour-link-content h3 {
+    .home-tour-wrapper .home-tour-link .tour-link-content span.tour-link-desc {
         text-align: initial;
         margin-left: 15px;
         font-size: 32px;
@@ -20949,7 +20933,7 @@ div#usa {
     .pricing-inner-strip {
         background: url("images/pricing/pricing-inner-image.jpg") no-repeat scroll -50px 100%/cover rgba(0, 0, 0, 0);
     }
-    .home-tour-wrapper .home-tour-link .tour-link-content h3 {
+    .home-tour-wrapper .home-tour-link .tour-link-content span.tour-link-desc {
         text-align: right;
         margin-right: 61px;
     }
@@ -23418,7 +23402,7 @@ div#usa {
     .banner-signup .banner-demo {
         font-size: 14px;
     }
-    .freshservice-intro h5 {
+    .freshservice-intro span.description {
         font-size: 15px;
     }
     .secondary-title {
@@ -23501,7 +23485,7 @@ div#usa {
         position: relative;
         top: 85px;
     }
-    .home-tour-wrapper .home-tour-link .tour-link-content h3 {
+    .home-tour-wrapper .home-tour-link .tour-link-content span.tour-link-desc {
         position: absolute;
         left: 40%;
         background-color: #5d7269;
@@ -24195,7 +24179,7 @@ div#usa {
     .home-banner-container .fd-home-content h2 {
         font-size: 16px;
     }
-    .freshservice-intro h5 {
+    .freshservice-intro span.description {
         font-size: 14px;
         width: 90%;
         margin: 0px auto;

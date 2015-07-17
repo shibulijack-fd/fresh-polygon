@@ -558,8 +558,10 @@ function twentythirteen_customize_preview_js() {
 add_action( 'customize_preview_init', 'twentythirteen_customize_preview_js' );
 
 /* CJ Custom filters */
-remove_filter( 'the_content', 'wpautop' );
-remove_filter( 'the_excerpt', 'wpautop' );
+
+//remove auto HTML tag addition while switching between visual and text editors
+remove_filter('the_content', 'wpautop');
+remove_filter('the_excerpt', 'wpautop');
 
 add_action( 'wp_enqueue_scripts', 'add_FD_script' );
 function add_FD_script() {
@@ -691,3 +693,35 @@ function tour_bottom_bar ( $items, $args ) {
     }
     return $items;
 }
+
+function my_format_TinyMCE( $init ) {
+	$init['remove_linebreaks'] = false;
+	//$in['convert_newlines_to_brs'] = false;
+	// $in['keep_styles'] = true;
+	// $in['accessibility_focus'] = true;
+	// $in['tabfocus_elements'] = 'major-publishing-actions';
+	// $in['media_strict'] = false;
+	// $in['paste_remove_styles'] = false;
+	// $in['paste_remove_spans'] = false;
+	// $in['paste_strip_class_attributes'] = 'none';
+	// $in['paste_text_use_dialog'] = true;
+	// $in['wpeditimage_disable_captions'] = true;
+	// $in['plugins'] = 'tabfocus,paste,media,fullscreen,wordpress,wpeditimage,wpgallery,wplink,wpdialogs,wpfullscreen';
+	// $in['wpautop'] = false;
+	// $in['apply_source_formatting'] = true;
+ //        $in['block_formats'] = "Paragraph=p; Heading 3=h3; Heading 4=h4";
+	// $in['toolbar1'] = 'bold,italic,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,wp_fullscreen,wp_adv ';
+	// $in['toolbar2'] = 'formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help ';
+	// $in['toolbar3'] = '';
+	// $in['toolbar4'] = '';
+	$ext = 'span[id|name|class|style]';
+	    // Add to extended_valid_elements if it alreay exists
+	    if ( isset( $init['extended_valid_elements'] ) ) {
+	        $init['extended_valid_elements'] .= ',' . $ext;
+	    } else {
+	        $init['extended_valid_elements'] = $ext;
+	    }
+	    return $init;
+	return $init;
+}
+//add_filter( 'tiny_mce_before_init', 'my_format_TinyMCE' );

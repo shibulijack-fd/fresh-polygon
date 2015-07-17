@@ -19,7 +19,6 @@ get_header(); ?>
 					
 
 					<div class="entry-content">
-                        
 						<?php the_content(); ?>
 						<?php wp_link_pages( array( 'before' => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'twentythirteen' ) . '</span>', 'after' => '</div>', 'link_before' => '<span>', 'link_after' => '</span>' ) ); ?>
 					</div><!-- .entry-content -->
@@ -67,12 +66,12 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 <script>
 (function ($) {
 	$(document).ready(function(){
-		 $("#y-breadcrumbs").hide();
-        var breadcrumbs = $("#y-breadcrumbs").html();
-        $(".breadcrumb").append(breadcrumbs);
-        $("#y-breadcrumbs").remove();
+		$("#y-breadcrumbs").hide();
+		var breadcrumbs = $("#y-breadcrumbs").html();
+		$(".breadcrumb").append(breadcrumbs);
+		$("#y-breadcrumbs").remove();
 	});
-	})(jQuery);
+})(jQuery);
 </script>
 <style>.w-grey-features{background-color:#fff; border:0; }</style>
 

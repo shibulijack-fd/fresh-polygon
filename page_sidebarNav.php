@@ -51,5 +51,25 @@ get_header(); ?>
         <!-- #f10 -->
     </div>
     <!-- #lpage -->
-
+<script>
+ (function ($) {
+    function resizeSidebar() {
+        if($(window).width() >= 768)  {
+            var rightPanelHeight = $(".right-panel").height();
+            $(".left-panel").height(rightPanelHeight);
+        }
+    }
+    $(document).ready(function(){
+        resizeSidebar();
+    });
+    $(window).resize(function(){
+        resizeSidebar();
+    });
+})(jQuery);
+</script>
+<style>
+footer {
+    margin-top: 0;
+}
+</style>
     <?php get_footer(); ?>

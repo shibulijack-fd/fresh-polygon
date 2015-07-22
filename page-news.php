@@ -50,5 +50,14 @@ get_header(); ?>
         <!-- #f10 -->
     </div>
     <!-- #lpage -->
-
+<script>
+ (function ($) {
+    $(document).ready(function(){
+        if($(window).width() >= 768)  {
+            var rightPanelHeight = $(".right-panel").height();
+            $(".left-panel").height(rightPanelHeight);
+        }     
+});
+})(jQuery);
+</script>
     <?php get_footer(); ?>

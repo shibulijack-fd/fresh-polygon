@@ -1,10 +1,11 @@
 <?php
 /**
- * Template Name: About
+ * Template Name: Sidebar
  *
  * @package WordPress
  * @subpackage Twenty_Thirteen
  * @since Twenty Thirteen 1.0
+ * Make sure to create a custom field "sub-menu"
  */
 
 get_header(); ?>
@@ -18,8 +19,10 @@ get_header(); ?>
     <div class="l-page fc">
         <div class="fg-2">
             <div class="left-panel">
-                <?php #$walker = new Menu_About; ?>
-                <?php wp_nav_menu( array( 'theme_location' => 'about', 'container_class' => 'sticky-sidebar','menu_class' => 'nav nav-list nav-sidebar', 'menu_id' => 'menu-short' ) ); ?>
+                <?php 
+                    $pageMenu = get_post_meta($post->ID, '_submenu_key', true); 
+                    wp_nav_menu( array( 'theme_location' => $pageMenu, 'container_class' => 'sticky-sidebar','menu_class' => 'nav nav-list nav-sidebar', 'menu_id' => 'menu-short' ) ); 
+                    ?>
             </div>
         </div>
         <div class="fg-10 omega">

@@ -252,6 +252,14 @@ function twentythirteen_widgets_init() {
 		'before_title'  => '<h3 class="widget-title">',
 		'after_title'   => '</h3>',
 	) );
+
+	register_sidebar( array(
+		    'name' => __( 'About Sidebar', 'twentythirteen' ),
+		    'id' => 'sidebar-about',
+		    'description' => __( 'Widgets in this area will be shown on about page.', 'twentythirteen' ),
+		    'before_widget' => '<li id="%1$s" class="widget %2$s">',
+		    'after_widget'  => '</li>'
+	) );
 }
 add_action( 'widgets_init', 'twentythirteen_widgets_init' );
 
@@ -557,7 +565,9 @@ function twentythirteen_customize_preview_js() {
 }
 add_action( 'customize_preview_init', 'twentythirteen_customize_preview_js' );
 
-/* CJ Custom filters */
+/* 
+* CJ Custom filters 
+*/
 
 //remove auto HTML tag addition while switching between visual and text editors
 remove_filter('the_content', 'wpautop');
@@ -582,6 +592,10 @@ function add_FD_script() {
     );
 }
 
+/*
+* Custom Menu walkers
+*/
+
 class Menu_Navigation_Top extends Walker_Nav_Menu {
 	function start_el(&$output, $item, $depth=0, $args=array(),$id=0) {
 		global $wp_query;
@@ -593,8 +607,8 @@ class Menu_Navigation_Top extends Walker_Nav_Menu {
 
 		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) );
 		$class_names = ' class="' . esc_attr( $class_names ) . '"';
-        
-        $list_id = ! empty( $item->attr_title ) ?  esc_attr( $item->attr_title ) : 'menu-item-'. $item->ID;
+
+		$list_id = ! empty( $item->attr_title ) ?  esc_attr( $item->attr_title ) : 'menu-item-'. $item->ID;
 		$output .= $indent . '<li id="'. $list_id . '"' . $value . $class_names .'>';
 
 		$attributes = ! empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) .'"' : '';
@@ -681,39 +695,25 @@ class Menu_Tour extends Walker_Nav_Menu {
 add_filter( 'wp_nav_menu_items', 'tour_bottom_bar', 10, 2 );
 function tour_bottom_bar ( $items, $args ) {
 	$output='';
-    if ($args->theme_location == 'tour') {
-    	$first_a='<a href="/" class="tour-fd-logo"></a>';
-    	$output.=$first_a;
-    	$output.=$items;
-    	$last_a='<a href="/signup" class="btn tour-nav-signup">Sign Up</a>';
-       	$output.=$last_a;
-       	$last_li= '<li class="bottom-bar"></li>';
-       	$output.=$last_li;
-       	$items=$output;
-    }
-    return $items;
+	if ($args->theme_location == 'tour') {
+		$first_a='<a href="/" class="tour-fd-logo"></a>';
+		$output.=$first_a;
+		$output.=$items;
+		$last_a='<a href="/signup" class="btn tour-nav-signup">Sign Up</a>';
+		$output.=$last_a;
+		$last_li= '<li class="bottom-bar"></li>';
+		$output.=$last_li;
+		$items=$output;
+	}
+	return $items;
 }
+
+/*
+* Custom TinyMCE configs
+*/
 
 function my_format_TinyMCE( $init ) {
 	$init['remove_linebreaks'] = false;
-	//$in['convert_newlines_to_brs'] = false;
-	// $in['keep_styles'] = true;
-	// $in['accessibility_focus'] = true;
-	// $in['tabfocus_elements'] = 'major-publishing-actions';
-	// $in['media_strict'] = false;
-	// $in['paste_remove_styles'] = false;
-	// $in['paste_remove_spans'] = false;
-	// $in['paste_strip_class_attributes'] = 'none';
-	// $in['paste_text_use_dialog'] = true;
-	// $in['wpeditimage_disable_captions'] = true;
-	// $in['plugins'] = 'tabfocus,paste,media,fullscreen,wordpress,wpeditimage,wpgallery,wplink,wpdialogs,wpfullscreen';
-	// $in['wpautop'] = false;
-	// $in['apply_source_formatting'] = true;
- //        $in['block_formats'] = "Paragraph=p; Heading 3=h3; Heading 4=h4";
-	// $in['toolbar1'] = 'bold,italic,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,wp_fullscreen,wp_adv ';
-	// $in['toolbar2'] = 'formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help ';
-	// $in['toolbar3'] = '';
-	// $in['toolbar4'] = '';
 	$ext = 'span[id|name|class|style]';
 	    // Add to extended_valid_elements if it alreay exists
 	    if ( isset( $init['extended_valid_elements'] ) ) {
@@ -725,3 +725,67 @@ function my_format_TinyMCE( $init ) {
 	return $init;
 }
 //add_filter( 'tiny_mce_before_init', 'my_format_TinyMCE' );
+
+/*
+* Add custom meta box to get sub menu value for 
+*/
+
+$post_id = $_GET['post'] ? $_GET['post'] : $_POST['post_ID'] ;
+$template_file = get_post_meta($post_id,'_wp_page_template',TRUE);
+  if ($template_file == 'page_sidebarNav.php') {
+	add_action( 'add_meta_boxes', 'add_meta_box_menu' );
+	add_action( 'save_post', 'submenu_save_meta_box_data' );
+}
+//Adds a box to the main column on the Post and Page edit screens.
+function add_meta_box_menu() {
+		add_meta_box(
+			'submenu_sectionid',
+			'Sub Menu',
+			'submenu_meta_box_callback',
+			'page',
+			'side',
+			'high'
+		);
+}
+//Prints the box content
+function submenu_meta_box_callback( $post ) {
+	wp_nonce_field( 'submenu_save_meta_box_data', 'submenu_meta_box_nonce' );
+	$value = get_post_meta( $post->ID, '_submenu_key', true );
+
+	echo '<label for="submenu_new_field"><p>';
+	_e( 'Specify the sidebar menu ID of this page', 'submenu_textdomain' );
+	echo '</p></label> ';
+	echo '<input type="text" id="submenu_new_field" placeholder="example: about" name="submenu_new_field" value="' . esc_attr( $value ) . '" size="25" required />';
+	echo '<p style="font-size: smaller; color: red;">* mandatory for this page template</p>';
+}
+//When the post is saved, saves our custom data.
+function submenu_save_meta_box_data( $post_id ) {
+	if ( ! isset( $_POST['submenu_meta_box_nonce'] ) ) {
+		return;
+	}
+	if ( ! wp_verify_nonce( $_POST['submenu_meta_box_nonce'], 'submenu_save_meta_box_data' ) ) {
+		return;
+	}
+	// If this is an autosave, our form has not been submitted, so we don't want to do anything.
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	// Check the user's permissions.
+	if ( isset( $_POST['post_type'] ) && 'page' == $_POST['post_type'] ) {
+		if ( ! current_user_can( 'edit_page', $post_id ) ) {
+			return;
+		}
+	} else {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+	}	
+	// Make sure that it is set.
+	if ( ! isset( $_POST['submenu_new_field'] ) ) {
+		return;
+	}
+	// Sanitize user input.
+	$my_data = sanitize_text_field( $_POST['submenu_new_field'] );
+	// Update the meta field in the database.
+	update_post_meta( $post_id, '_submenu_key', $my_data );
+}

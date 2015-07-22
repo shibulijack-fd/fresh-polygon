@@ -99,7 +99,8 @@ function twentythirteen_setup() {
 	    'secondary' => __( 'Main Menu', 'twentythirteen' ),
 	    'tour' => __( 'Tour Menu', 'twentythirteen' ),
         'about' => __( 'About Menu', 'twentythirteen' ),
-        'error' => __( 'Error Menu', 'twentythirteen' )
+        'error' => __( 'Error Menu', 'twentythirteen' ),
+        'resellers' => __( 'Resellers Menu', 'twentythirteen' )
 	 ) );
 
 	/*
@@ -251,14 +252,6 @@ function twentythirteen_widgets_init() {
 		'after_widget'  => '</aside>',
 		'before_title'  => '<h3 class="widget-title">',
 		'after_title'   => '</h3>',
-	) );
-
-	register_sidebar( array(
-		    'name' => __( 'About Sidebar', 'twentythirteen' ),
-		    'id' => 'sidebar-about',
-		    'description' => __( 'Widgets in this area will be shown on about page.', 'twentythirteen' ),
-		    'before_widget' => '<li id="%1$s" class="widget %2$s">',
-		    'after_widget'  => '</li>'
 	) );
 }
 add_action( 'widgets_init', 'twentythirteen_widgets_init' );
@@ -708,23 +701,26 @@ function tour_bottom_bar ( $items, $args ) {
 	return $items;
 }
 
+add_filter( 'wp_nav_menu_items', 'primary_menu_addons', 10, 2 );
+function primary_menu_addons ( $items, $args ) {
+	if ($args->theme_location == 'secondary') {
+		$search='<li class="gss-menu-item"><label for="gss_pane_toggle"><i class="icon-gss"></i> </label></li>';
+		$items.=$search;
+	}
+	return $items;
+}
+
 /*
 * Custom TinyMCE configs
 */
 
-function my_format_TinyMCE( $init ) {
-	$init['remove_linebreaks'] = false;
-	$ext = 'span[id|name|class|style]';
-	    // Add to extended_valid_elements if it alreay exists
-	    if ( isset( $init['extended_valid_elements'] ) ) {
-	        $init['extended_valid_elements'] .= ',' . $ext;
-	    } else {
-	        $init['extended_valid_elements'] = $ext;
-	    }
-	    return $init;
-	return $init;
+function override_mce_options($initArray) {
+	$opts = '*[*]';
+	$initArray['valid_elements'] = $opts;
+	$initArray['extended_valid_elements'] = $opts;
+	return $initArray;
 }
-//add_filter( 'tiny_mce_before_init', 'my_format_TinyMCE' );
+add_filter('tiny_mce_before_init', 'override_mce_options');
 
 /*
 * Add custom meta box to get sub menu value for 

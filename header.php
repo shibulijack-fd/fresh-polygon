@@ -39,6 +39,7 @@
 		<header id="masthead" class="fd-header" role="banner">
 			<div id="navbar" class="top-nav-strip">
 				<div class="l-page">
+                    <button class="show-in-mobile menu-icon"></button>
 					<nav id="site-navigation" class="top-site-nav" role="navigation">
 						<!-- <button class="menu-toggle"><?php _e( 'Menu', 'twentythirteen' ); ?></button> -->
 						<!-- <a class="screen-reader-text skip-link" href="#content" title="<?php esc_attr_e( 'Skip to content', 'twentythirteen' ); ?>"><?php _e( 'Skip to content', 'twentythirteen' ); ?></a> -->
@@ -53,6 +54,9 @@
 					<div class="l-page"> 
 						<a href="<?php echo get_site_url(); ?>" class="fd-logo"></a>
 						<button class="show-in-mobile menu-icon"></button>
+                        <label for="gss_pane_toggle">
+                            <i class="show-in-mobile btn btn-banner btn-flat btn-light icon-gss"></i>
+                        </label>
 						<nav class="site-nav">
 							<?php $walker = new Menu_With_Description; ?>
 							<?php wp_nav_menu( array( 'theme_location' => 'secondary', 'menu_class' => 'nav-menu', 'menu_id' => 'main-menu' , 'walker' => $walker) ); ?>
@@ -63,6 +67,8 @@
 
 			
 		</header><!-- #masthead -->
+        <?php get_template_part( 'partials/site-search'); ?>
+		
 
 
 

@@ -4945,102 +4945,86 @@ if ($(window).width() >= 1080){
 
 //global variable to store the results of suggestions
 var suggestions = [];
+
 //global variable for serving as a lock during search requests to Google.
 var gssReady = true;
 
+//global variable to check if user has stopped typing and provide suggestions
+var gssSuggestLock = 0;
+
 /* Code to add event listeners on document ready */
 jQuery(document).ready(function () {
-    
+
     /* Event listener for the search element toggler */
-    jQuery("#gss_pane_toggle").change(function () {
-        if (!document.getElementById("gss_pane_toggle").checked) { //when search is opened
-            
-            //switch off search bar sticky state
-            jQuery("#gss_search_bar_sticky_toggle").prop("checked", false);
-            
-            //fade out helper icons
-            jQuery(".icon-gss-clear").fadeOut();
-            jQuery(".gss-search-bar .icon-gss-enter").fadeOut();
-            
+    jQuery('#gss_pane_toggle').change(function (e) {
+        if (!document.getElementById("gss_pane_toggle").checked) { //when search is closed
+
             //reset margin offsets which were given for preventing scrollbar jumps
             jQuery("body").css({"overflow-y": "auto", "margin-right": "0"});
             jQuery(".top-nav-strip").css({"position": "static", "right": "0"});
-            
-            //reset the search wrapper
-            gssReset();
-            
-            //reset the search parameters
-            jQuery("#gss_search_input").val("");
-            onInputChange("");
-            jQuery("#gss_start_index").val(0);
-            
-        } else { //when search is closed
+
+            //fade out the dismiss button
+            jQuery(".gss-hide-pane").css("opacity", "0");
+
+            //time out of 200ms to wait for the animation to complete before loading the 
+            //browser with JS operations
+            window.setTimeout(function() {
+
+                //hide the clear results ico
+                jQuery(".icon-gss-clear").hide();
+
+                //reset the search wrapper
+                gssReset();
+
+                //reset the search parameters
+                jQuery("#gss_search_input").val("");
+
+                //clear the input field completely
+                onInputChange("");
+
+                //reset results index
+                jQuery("#gss_start_index").val(0);
+
+                //display the landing div
+                jQuery("#gss_landing").show();
+
+                //reset suggestions
+                suggestions.length = 0;
+            }, 200);
+
+        } else { //when search is opened
+
             //set margin offsets to prevent scroll bar jumps
             jQuery("body").css({"overflow-y": "hidden", "margin-right": "15px"});
             jQuery(".top-nav-strip").css({"position": "relative", "right": "7.5px"});
-            
-            //fade in helper icons
-            jQuery(".gss-search-bar .icon-gss-enter").fadeIn();
-            
+
             //focus on the input
             jQuery("#gss_search_input").focus();
-            
-            //reset suggestions
-            suggestions.length = 0;
+
+            //fade in the dismiss icon
+            window.setTimeout(function() {
+                jQuery(".gss-hide-pane").css("opacity", "1.0")
+            }, 175);
         }
     });
 
-    /* Event Listener for displaying hints and detecting enter keypress */
-    jQuery("#gss_search_input").on("change keyup paste", function (e) {
+    /* Event Listener for ESCAPE key */
+    jQuery("html").on("keyup", function(e) {
         var key = (e.keyCode ? e.keyCode : e.which);
-        if(key != 9 && (key < 38 || key > 40)) {
-            jQuery("#gss_search_suggestion").val("");
-            if(jQuery("#gss_search_input").val() != jQuery("#gss_previous_input").val()) {
-                jQuery("#gss_previous_input").val(jQuery("#gss_search_input").val());
-                onInputChange((jQuery("#gss_previous_input").val()).trim());
-            }
-            if (key == 13) { //Enter keycode
-                onEnterKeyPress();
-            }
-        }
-    });
-    
-    /* Event listener for tab key and right arrow auto-completion
-     * and up/down arrow suggestion navigation
-     */
-    jQuery("#gss_search_input").on("keydown", function(e) {
-        var key = (e.keyCode ? e.keyCode : e.which);
-        var suggestion_field = jQuery("#gss_search_suggestion");
-        if((key == 9 || key == 39)) {
-            if(suggestion_field.val() != "") {
-                e.preventDefault();
-                jQuery("#gss_search_input").val(suggestion_field.val());
-                suggestion_field.val("");
-            }
-        } else if (key == 38) { // up-arrow
-            e.preventDefault();
-            var index = suggestions.indexOf(suggestion_field.val());
-            if(typeof index != "undefined" && index > 0) {
-                suggestion_field.val(suggestions[index-1]);
-            }
-        } else if (key == 40) { // down-arrow
-            e.preventDefault();
-            var index = suggestions.indexOf(suggestion_field.val());
-            if(typeof index != "undefined" && index < (suggestions.length - 1)) {
-                suggestion_field.val(suggestions[index+1]);
-            }
+        if(document.getElementById('gss_pane_toggle').checked && key == 27) {
+            jQuery('label[for="gss_pane_toggle"]:first').click();
         }
     });
 
     /* Event listener for clearing search results */
     jQuery("i.icon-gss-clear").click(function() {
-        onInputChange("");
         jQuery("#gss_search_input").val("");
+        onInputChange("");
         jQuery("#gss_search_input").focus();
     });
 
     /* Event listener for triggering a search when the arrow icon is clicked */
-    jQuery(".gss-search-bar i.icon-gss-enter").click(function(){
+    jQuery(".gss-search-bar i.icon-gss-enter").click(function() {
         onEnterKeyPress();
     });
 
@@ -5053,46 +5037,23 @@ jQuery(document).ready(function () {
     jQuery("#gss_results").scroll(function () {
         if (jQuery("#gss_results > ul").children().length > 0) {
             var pane = document.querySelector("#gss_results");
+
+            /* check if user has scrolled from the top of the list and trigger search bar sticky state */
             if (pane.scrollTop > 0) {
                 jQuery("#gss_search_bar_sticky_toggle").prop("checked", true);
             } else {
                 jQuery("#gss_search_bar_sticky_toggle").prop("checked", false);
             }
+
+            /* 
+             * if the user has scrolled to the bottom of the results list, load more results or display 
+             * an appropriate message indicating the end of the results list
+             */
             if (pane.scrollHeight - pane.scrollTop === pane.clientHeight) {
-                var start_index = jQuery("#gss_start_index").val();
-                if (parseInt(start_index, 10) > 0) {
-                    if(gssReady) {
-                        gssReady = false;
-                        gsSubmit(start_index);
-                    }
-                } else if (parseInt(start_index, 10) == -1) {
-                    if (!jQuery(".gss-searchpane").find(".gss-footer").length) {
-                        var msg = "<div class=\"gss-footer\"><span>Uh-oh!</span><br/><br/>";
-                        msg += "<span>You seem to be having difficulties finding what you want. We’d let you search on but there ";
-                        msg += "be zombies yonder. So why don’t you just try again with a different search term?</span><br/>";
-                        msg += "<br/><span>If you’d like to get in touch with us, here’s our <a href=\"/contact\">contact page</a> ";
-                        msg += "with all the info you need!</span>";
-                        msg += "</div>";
-                        jQuery("#gss_results").append(msg);
-                        jQuery(".gss-footer").slideDown('fast', function(){
-                            jQuery("#gss_results").animate({scrollTop: (pane.scrollHeight - pane.clientHeight)},500); 
-                        });
-                    }
-                } else {
-                    if (!jQuery(".gss-searchpane").find(".gss-footer").length) {
-                        var msg = "<div class=\"gss-footer\"><span>The End of the Road</span><br/><br/>";
-                        msg += "<span>Your search term didn’t match any other document. If you haven’t found the right ";
-                        msg += "one yet, why don’t you try again with a different term?</span><br/>";
-                        msg += "<br/><span>If you’d like to get in touch with us, here’s our <a href=\"/contact\">contact page</a> ";
-                        msg += "with all the info you need!</span>";
-                        msg += "</div>";
-                        jQuery("#gss_results").append(msg);
-                        jQuery(".gss-footer").slideDown('fast', function(){
-                            jQuery("#gss_results").animate({scrollTop: (pane.scrollHeight - pane.clientHeight)},500); 
-                        });
-                    }
-                }
+                onScrollToBottom(pane);
             }
+
+            /* if the user scrolls beyond 10% of the results list height, show the back to top icon */
             if(pane.scrollTop >= (0.1 * pane.scrollHeight)) {
                 jQuery(".gss-back-to-top").addClass('visible');
             } else {
@@ -5100,11 +5061,114 @@ jQuery(document).ready(function () {
             }
         }
     });
+
+    /* Event Listener for displaying hints and detecting enter key up, paste or change */
+    jQuery("#gss_search_input").on("change keyup paste", function (e) {
+        var key = (e.keyCode ? e.keyCode : e.which);
+        var suggestion_field = jQuery("#gss_search_suggestion");
+        switch(key) { 
+            case 13: //enter key
+                suggestion_field.addClass("hidden");
+                onEnterKeyPress();
+                break;
+            default: //other codes (except arrows and tab)    
+                suggestion_field.removeClass("hidden");
+                if(key != 9 && (key < 37 || key > 40)) {
+                    jQuery("#gss_search_suggestion").val("");
+                    onInputChange((jQuery("#gss_search_input").val()).trim());
+
+                    //desktop only feature
+                    if(jQuery(".site-nav li.gss-menu-item").css("display") != "none") {
+                        var current_time = (new Date()).getTime();
+                        gssSuggestLock = current_time;
+                        window.setTimeout(function() {
+                            if(current_time == gssSuggestLock){
+                                gssSuggestLock = 0;
+                                gssSuggest();
+                            }
+                        }, 200);
+                    }
+                }    
+                break;
+        }
+    });
+
+    /* Add this listener only for desktop site */
+    if(jQuery(".site-nav li.gss-menu-item").css("display") != "none") {
+        /* 
+         * Event listener for tab key and right arrow auto-completion
+         * and up/down arrow suggestion navigation
+         */
+        jQuery("#gss_search_input").on("keydown", function(e) {
+            var key = (e.keyCode ? e.keyCode : e.which);
+            var suggestion_field = jQuery("#gss_search_suggestion");
+            switch(key) {
+                case 8: //backspace - same as delete, so no break statement.
+                case 46: //delete key
+                    suggestion_field.val("");
+                    break;
+                case 9: //tab key - same as right arrow, so no break statement.
+                case 39: // right arrow
+                    if(suggestion_field.val() != "") {
+                        e.preventDefault();
+                        jQuery("#gss_search_input").val(suggestion_field.val());
+                        suggestion_field.val("");
+                    }
+                    break;
+                case 38: //up arrow
+                    e.preventDefault();
+                    var index = suggestions.indexOf((suggestion_field.val()).toLowerCase());
+                    if(typeof index != "undefined" && index > 0) {
+                        suggestion_field.val(suggestions[index-1].replace(this.value.toLowerCase(), this.value));
+                    }
+                    break;
+                case 40: //down arrow
+                    e.preventDefault();
+                    var index = suggestions.indexOf((suggestion_field.val()).toLowerCase());
+                    if(typeof index != "undefined" && index < (suggestions.length - 1)) {
+                        suggestion_field.val(suggestions[index+1].replace(this.value.toLowerCase(), this.value));
+                    }
+                    break;
+            }
+        });    
+    }
+
+    /* Event listener for detecting clicks on the result items and opening the links */
+    jQuery("#gss_results > ul").on("click", "li.result-item", function(e) {
+        if(e.target.tagName == "UL") {
+            jQuery(e.target.querySelector("a"))[0].click();
+        } else {
+            if(jQuery(e.target).hasClass("result-title")) {
+                jQuery(e.target.querySelector("a"))[0].click();
+            } else if(jQuery(e.target).hasClass("result-snippet")) {
+                jQuery(e.target.parentNode.querySelector("li > a"))[0].click();
+            }
+        }
+    });
+
+    //    /* Event listeners for changing border color when input element is focused */
+    //    jQuery("#gss_search_input").on("focus", function() {
+    //        jQuery(".gss-search-bar-wrapper").addClass("focused");
+    //    });
+    //    jQuery("#gss_search_input").on("blur", function() {
+    //        jQuery(".gss-search-bar-wrapper").removeClass("focused");
+    //    });
 });
+
+/* function for resetting the search element */
+function gssReset() {
+    jQuery("#gss_search_suggestion").val("");
+    jQuery("#gss_search_bar_sticky_toggle").prop("checked", false);
+    jQuery(".gss-back-to-top").removeClass('visible');
+    jQuery("#gss_results > ul").empty();
+    jQuery(".gss-no-results").remove();
+    jQuery(".gss-footer").remove();
+}
 
 /* function to trigger the chain of events for a new search on enter key press */
 function onEnterKeyPress() {
-    jQuery.when(jQuery(".gss-search-hints, .gss-search-bar .icon-gss-enter").fadeOut(50)).done(function() {
+    document.getElementById("gss_results_status").checked = true;
+    jQuery.when(jQuery(".gss-search-hints, .gss-search-bar .icon-gss-enter, #gss_landing").fadeOut(50)).done(function() {
         gssReset();
         gsSubmit(0, function() {
             window.setTimeout(function(){
@@ -5117,93 +5181,130 @@ function onEnterKeyPress() {
 /* function to handle changes in search input box */
 function onInputChange(text) {
     switch (text.length) {
-    case 0:
-        jQuery('.icon-gss-clear').fadeOut('fast', function(){
-            gssReset();
-            jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter').css("opacity", "0");
-            jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter').fadeIn('fast');
-            jQuery("#gss_search_suggestion").val("");
-        });
-        break;
-    case 1:
-        jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter').css("opacity", "0.33");
-        break;
-    case 2:
-        jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter').css("opacity", "0.66");
-        break;
-    default:
-        jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter').css("opacity", "1");
+        case 0:
+            jQuery('.icon-gss-clear').fadeOut('fast', function(){
+                document.getElementById("gss_results_status").checked = false;
+                gssReset();
+                jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter').css("opacity", "0");
+                jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter, #gss_landing').fadeIn('fast');
+                jQuery("#gss_search_suggestion").val("");
+            });
+            break;
+        case 1:
+            jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter').css("opacity", "0.33");
+            break;
+        case 2:
+            jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter').css("opacity", "0.66");
+            break;
+        default:
+            jQuery('.gss-search-hints, .gss-search-bar .icon-gss-enter').css("opacity", "1");
     }
-    
+}
+
+/* function to handle results scrolling */
+function onScrollToBottom(pane) {
+    var start_index = jQuery("#gss_start_index").val();
+    if (parseInt(start_index, 10) > 0) {
+        if(gssReady) {
+            gssReady = false;
+            gsSubmit(start_index);
+        }
+    } else if (parseInt(start_index, 10) == -1) {
+        if (!jQuery(".gss-searchpane").find(".gss-footer").length) {
+            var msg = "<div class=\"gss-footer\"><span>Uh-oh!</span><br/><br/>";
+            msg += "<span>You seem to be having difficulties finding what you want. We’d let you search on";
+            msg += " but there be zombies yonder. So why don’t you just try again with a different search term?";
+            msg += "</span><br/><br/><span>If you’d like to get in touch with us, here’s our <a target=\"_blank\"";
+            msg += " href=\"/contact\">Contact page</a> with all the info you need!</span>";
+            msg += "</div>";
+            jQuery("#gss_results").append(msg);
+            jQuery(".gss-footer").slideDown('fast', function(){
+                jQuery("#gss_results").animate({scrollTop: (pane.scrollHeight - pane.clientHeight)},500); 
+            });
+        }
+    } else {
+        if (!jQuery(".gss-searchpane").find(".gss-footer").length) {
+            var msg = "<div class=\"gss-footer\"><span>The End of the Road</span><br/><br/>";
+            msg += "<span>Your search term didn’t match any other document. If you haven’t found the right ";
+            msg += "one yet, why don’t you try again with a different term?</span><br/>";
+            msg += "<br/><span>If you’d like to get in touch with us, here’s our <a target=\"_blank\"";
+            msg += " href=\"/contact\">Contact page</a> with all the info you need!</span>";
+            msg += "</div>";
+            jQuery("#gss_results").append(msg);
+            jQuery(".gss-footer").slideDown('fast', function(){
+                jQuery("#gss_results").animate({scrollTop: (pane.scrollHeight - pane.clientHeight)},500); 
+            });
+        }
+    }
+}
+
+/* function to provide search term suggestions */
+function gssSuggest() {
+    var text = jQuery("#gss_search_input").val();
     if(text.length >= 3) {
         //Auto-suggest feature
         var suggest_query = "http://clients1.google.com/complete/search?";
         suggest_query += "&client=partner&sugexp=gsnos%2Cn%3D13&gs_rn=25&gs_ri=partner";
         suggest_query += "&partnerid=010818749140373723172%3Avop1-soxtg4";
         suggest_query += "&types=t&ds=cse&cp=2&q=";//
-        suggest_query += jQuery("#gss_search_input").val();
+        suggest_query += (jQuery("#gss_search_input").val()).toLowerCase();
         jQuery.ajax({
             url: suggest_query,
             method: "GET",
             dataType: "jsonp",
             jsonp: "callback",
             success: function(result) {
+                var input_field = jQuery("#gss_search_input");
                 result[1].forEach(function(input, index){
                     result[1][index] = input[0];
                 });
                 suggestions = result[1];
-                if(result[1][0] && result[1][0] != jQuery("#gss_search_input").val()) {
-                    jQuery("#gss_search_suggestion").val(suggestions[0]);
+                if(result[1][0] && result[1][0] != input_field.val() 
+                   && input_field.val().length > 0) {
+                    //&& !document.getElementById("gss_results_status").checked) {
+                    jQuery("#gss_search_suggestion").val(suggestions[0].replace(text.toLowerCase(),text));
                 }
             }
         });
     }
 }
 
-/* function for resetting the search element */
-function gssReset() {
-    jQuery("#gss_search_bar_sticky_toggle").prop("checked", false);
-//    jQuery("#gss_results").hide();
-    jQuery(".gss-back-to-top").removeClass('visible');
-    jQuery("#gss_results > ul").html("");
-    jQuery(".gss-no-results").remove();
-    jQuery(".gss-footer").remove();
-}
-
 /* Search query processor */
 function gsSubmit(startIndex, callback) {
     jQuery(".gss-loading").fadeIn('fast');
-    
+
     //JSON API
     //URL for Google Site Search's JSON API 
     var search_query = "https://www.googleapis.com/customsearch/v1?";
-    
+
     //Parameter 1 - API Key (this is the unique key for accessing the Freshdesk Google Site Search through the JSON API)
     var APIKey = "AIzaSyCMGfdDaSfjqv5zYoS0mTJnOT3e9MURWkU";
-    
+
     //Parameter 2 - Engine ID (this is ID of the custom search engine created for Freshdesk. The custom engine is linked to
     //the freshdesk marketing team's account (ramesh@freshdesk.com). This ID and the above key can be found in that account.
     //Search engine tuning and setup can also be done in that account.
     var engineID = "010818749140373723172:vop1-soxtg4";
-    
+
     //Parameter 3 - actual search terms entered by a user.
     var search_input = encodeURIComponent(document.getElementById("gss_search_input").value);
 
     search_query += ("key=" + APIKey + "&cx=" + engineID + "&q=" + search_input);
 
     //Parameter 4 (optional) - start index of the results. Default is 1. Google returns up to 10 results for a search query.
-    //These 10 results are the first page of results. For all subsequent pages, the start index needs to be specified. For example,
-    //page 2 starts at index 11 and goes up to index 20. Page 3 starts at index 21 and so on.
+    //These 10 results are the first page of results. For all subsequent pages, the start index needs to be specified.
+    //For example, page 2 starts at index 11 and goes up to index 20. Page 3 starts at index 21 and so on.
     if (parseInt(startIndex, 10) > 0) {
         search_query += "&start=" + startIndex;
     }
-    
+
     //AJAX call to the search engine.
     jQuery.ajax({
         url: search_query,
         method: 'POST',
         complete: function (result) {
+            console.log(result);
             var response = JSON.parse(result.responseText);
+            console.log(response);
             if(response.items && response.items.length > 0) {
                 displayResults(response);
                 gssReady = true;
@@ -5211,8 +5312,8 @@ function gsSubmit(startIndex, callback) {
                 gssReady = true;
                 var msg = "<div class=\"gss-footer\"><span>Sorry!</span><br/><br/><span>We couldn’t find what ";
                 msg += " you were looking for.  Why don’t you try again with a different keyword?</span><br/><br/>";
-                msg += "<span>If you’d like to get in touch with us, here’s our <a href=\"/contact\">contact page</a> ";
-                msg += "with all the info you need!</span></div>";
+                msg += "<span>If you’d like to get in touch with us, here’s our <a target=\"_blank\" href=\"/contact\">";
+                msg += "Contact page</a> with all the info you need!</span></div>";
                 jQuery("#gss_results").append(msg);
                 jQuery(".gss-loading").fadeOut(function(){
                     jQuery(".gss-footer").slideDown('fast');
@@ -5221,6 +5322,7 @@ function gsSubmit(startIndex, callback) {
             if(callback) {                
                 callback();
             }
+            ga('send','pageview', 'freshdesk.com/?q='+search_input);
         }
     });
 }
@@ -5229,16 +5331,15 @@ function gsSubmit(startIndex, callback) {
 function displayResults(results) {
     document.querySelector('#gss_results > ul').innerHTML += renderHtmlResults(results);
     jQuery(".gss-loading").fadeOut(function(){
-//        jQuery("#gss_results").slideDown('slow');
-        
+
         //set information about the next page, if available.
         if (results.queries.nextPage) {
-            
+
             //if start index for next page is not zero, set the start index.
             if (parseInt(results.queries.nextPage[0].startIndex, 10) != 0) {
                 jQuery("#gss_start_index").val(results.queries.nextPage[0].startIndex);
             }
-            
+
             //if the start index is > 100, set a value of -1 to break the infinite scroll
             //and inform the user that they might need to adjust their search terms.
             if (parseInt(results.queries.nextPage[0].startIndex, 10) > 100) {
@@ -5259,7 +5360,7 @@ function renderHtmlResults(results) {
     var regex_bold = new RegExp("\\u003c\/?(b\\u003e)", "g"); //regex to remove bold tags inserted by Google
     var output = "";
     for (var i = 0; i < results.items.length; i++) {
-        output += '<li>';
+        output += '<li class="result-item">';
         output += '<ul style="list-style: none; text-align: left;">';
         output += '<li class="result-title"><a target="_blank" href="';
         output += results.items[i].link.search(/https|http/g) >= 0 ? '' : 'http://';
@@ -5269,7 +5370,6 @@ function renderHtmlResults(results) {
         if (results.items[i].formattedUrl.search(/support.freshdesk.com/g) >= 0) {
             output += '<li class="result-tag"><div class="gss-solution-article">Solution Article</div></li>';
         }
-//        output += '<li class="result-link">' + results.items[i].htmlFormattedUrl.replace(regex_bold, "") + "</li>";
         output += '<li class="result-snippet">';
         output += (results.items[i].htmlSnippet.replace(regex_linebreak, "")).replace(regex_bold, "") + "</li>";
         output += '</ul>';

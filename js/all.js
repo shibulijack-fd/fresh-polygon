@@ -5300,7 +5300,7 @@ function gsSubmit(startIndex, callback) {
     //AJAX call to the search engine.
     jQuery.ajax({
         url: search_query,
-        method: 'POST',
+        method: 'GET',
         complete: function (result) {
             console.log(result);
             var response = JSON.parse(result.responseText);

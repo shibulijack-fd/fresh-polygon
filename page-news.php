@@ -60,4 +60,9 @@ get_header(); ?>
 });
 })(jQuery);
 </script>
-    <?php get_footer(); ?>
+<style>
+footer {
+    margin-top: 0;
+}
+</style>
+<?php get_footer(); ?>

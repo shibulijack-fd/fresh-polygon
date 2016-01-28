@@ -34,7 +34,7 @@ if ( ! isset( $content_width ) )
 /**
  * Add support for a custom header image.
  */
-require get_template_directory() . '/inc/custom-header.php';
+//require get_template_directory() . '/inc/custom-header.php';
 
 /**
  * Twenty Thirteen only works in WordPress 3.6 or later.
@@ -601,13 +601,23 @@ class Menu_Navigation_Top extends Walker_Nav_Menu {
 		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) );
 		$class_names = ' class="' . esc_attr( $class_names ) . '"';
 
+		//Fix for static pages menu links
+		// $inputURL = esc_attr($item->url);
+		// $pattern = get_site_url();
+		// $replace = "http://freshdesk.com";
+		// $outputURL = str_replace($pattern, $replace, $inputURL);
+		// if($inputURL == '#')
+		// {
+		// 	$outputURL = $replace;
+		// }
+
 		$list_id = ! empty( $item->attr_title ) ?  esc_attr( $item->attr_title ) : 'menu-item-'. $item->ID;
 		$output .= $indent . '<li id="'. $list_id . '"' . $value . $class_names .'>';
 
 		$attributes = ! empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) .'"' : '';
 		$attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target ) .'"' : '';
 		$attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) .'"' : '';
-		$attributes .= ! empty( $item->url ) ? ' href="' . esc_attr( $item->url ) .'"' : '';
+		$attributes .= ! empty( $item->url ) ? ' href="' . esc_attr($item->url) .'"' : '';
 		$attributes .= ! empty( $item->attr_title ) ? ' id="' . esc_attr( $item->attr_title ) .'"' : '';
 
 		$item_output = $args->before;
@@ -623,7 +633,7 @@ class Menu_Navigation_Top extends Walker_Nav_Menu {
 
 class Menu_With_Description extends Walker_Nav_Menu {
 	function start_el(&$output, $item, $depth=0, $args=array(),$id=0) {
-		global $wp_query;
+		global $wp_query, $rooturl;
 		$indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
 		
 		$class_names = $value = '';
@@ -633,12 +643,21 @@ class Menu_With_Description extends Walker_Nav_Menu {
 		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) );
 		$class_names = ' class="' . esc_attr( $class_names ) . '"';
 
-		$output .= $indent . '<li id="menu-item-'. $item->ID . '"' . $value . $class_names .'>';
+		//Fix for static pages menu links
+		// $inputURL = esc_attr($item->url);
+		// $pattern = get_site_url();
+		// $replace = "http://freshdesk.com";
+		// $outputURL = str_replace($pattern, $replace, $inputURL);
+		// if($inputURL == '#')
+		// {
+		// 	$outputURL = $replace;
+		// }
 
+		$output .= $indent . '<li id="menu-item-'. $item->ID . '"' . $value . $class_names .'>';
 		$attributes = ! empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) .'"' : '';
 		$attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target ) .'"' : '';
 		$attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) .'"' : '';
-		$attributes .= ! empty( $item->url ) ? ' href="' . esc_attr( $item->url ) .'"' : '';
+		$attributes .= ! empty( $item->url ) ? ' href="' . esc_attr($item->url).'"' : '';
 		$attributes .= ! empty( $item->attr_title ) ? ' id="' . esc_attr( $item->attr_title ) .'"' : '';
 
 		$item_output = $args->before;

@@ -11,11 +11,13 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
+	<header class="entry-header top-space-large">
+
 		<?php if ( is_single() ) : ?>
-		<h1 class="entry-title"><?php the_title(); ?></h1>
+		<h1 class="entry-title text-center"><?php the_title(); ?></h1>
+		<h3 class="top-space-small text-center">Written by <a href="<?php the_author_link(); ?>"><?php the_author(); ?></a> on <?php the_time('F j, Y'); ?></h3>
 		<?php else : ?>
-		<h1 class="entry-title">
+		<h1 class="entry-title text-center">
 			<a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
 		</h1>
 		<?php endif; // is_single() ?>
@@ -32,7 +34,7 @@
 		<?php the_excerpt(); ?>
 	</div><!-- .entry-summary -->
 	<?php else : ?>
-	<div class="entry-content">
+	<div class="entry-content top-space-large">
 		<?php
 			/* translators: %s: Name of current post */
 			the_content( sprintf(

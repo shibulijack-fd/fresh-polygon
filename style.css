@@ -4,7 +4,7 @@ Theme URI: https://github.com/shibulijack-fd/fresh-polygon
 Author: Freshdesk UI Team
 Author URI: https://github.com/shibulijack-fd/fresh-polygon
 Description: Polygon theme for Freshdesk website, based on wordpress base theme twenty thirteen.
-Version: 1.0
+Version: 2.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: twentythirteen
@@ -7098,6 +7098,32 @@ header {
         margin-top: 1px;
         margin-bottom: 7px;
     }
+}
+#content {
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    font-size: 18px;
+    line-height: 30px;
+}
+#content p {
+font-weight: 400;
+}
+#content img {
+    display: block;
+    margin: 20px auto;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+#content li {
+    list-style: inherit;
+    margin-left: 50px;
+    font-size: 16px;
+}
+#content h4 {
+    padding-top: 30px;
+    font-weight: 500;
 }
 .top-nav-strip {
     height: 22px;
@@ -25197,6 +25223,7 @@ div#usa {
         background-size: 13px;
         margin-top: 10px;
     }
+
 }
 @media only screen and (max-width: 45em) and (min-width: 455px) {
     .res-widget {

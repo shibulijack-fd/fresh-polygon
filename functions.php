@@ -563,8 +563,8 @@ add_action( 'customize_preview_init', 'twentythirteen_customize_preview_js' );
 */
 
 //remove auto HTML tag addition while switching between visual and text editors
-remove_filter('the_content', 'wpautop');
-remove_filter('the_excerpt', 'wpautop');
+// remove_filter('the_content', 'wpautop');
+// remove_filter('the_excerpt', 'wpautop');
 
 add_action( 'wp_enqueue_scripts', 'add_FD_script' );
 function add_FD_script() {
@@ -729,17 +729,6 @@ function primary_menu_addons ( $items, $args ) {
 	return $items;
 }
 
-/*
-* Custom TinyMCE configs
-*/
-
-function override_mce_options($initArray) {
-	$opts = '*[*]';
-	$initArray['valid_elements'] = $opts;
-	$initArray['extended_valid_elements'] = $opts;
-	return $initArray;
-}
-add_filter('tiny_mce_before_init', 'override_mce_options');
 
 /*
 * Add custom meta box to get sub menu value for 

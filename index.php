@@ -16,12 +16,9 @@
 
 get_header(); ?>
 
- <div class="banner">
-        <div class="l-page no-clear align-center">
-            <h2 class="s-heading"><?php echo the_title(); ?></h2>
-        </div>
+ <div class="banner" id="index">
     </div>
-
+<div class="l-page fc">
 	<div id="primary" class="content-area">
 		<div id="content" class="site-content" role="main">
 		<?php if ( have_posts() ) : ?>
@@ -39,6 +36,6 @@ get_header(); ?>
 
 		</div><!-- #content -->
 	</div><!-- #primary -->
-
+</div>
 <?php #get_sidebar(); ?>
 <?php get_footer(); ?>

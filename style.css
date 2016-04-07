@@ -7107,6 +7107,7 @@ header {
 }
 #content p {
 font-weight: 400;
+text-align: justify;
 }
 #content img {
     display: block;
@@ -7124,6 +7125,46 @@ font-weight: 400;
 #content h4 {
     padding-top: 30px;
     font-weight: 500;
+}
+.thumbnail {
+    width: 40%;
+    float: left;
+    margin: 10px 5%;
+    background: #fff;
+    /*padding: 1%;*/
+    border-radius: 5px;
+    height: 300px;
+}
+.thumbnail h1 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 20px;
+    width: 97%;
+    margin: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.thumbnail h3 {
+    font-size: 14px;
+        padding: 5px;
+        text-align: center;
+}
+.thumbnail .entry-header {
+    padding: 0;
+}
+.thumbnail .entry-content {
+    padding: 10px;
+}
+.thumbnail .entry-thumbnail {
+    padding: 5px;
+}
+.thumbnail .entry-thumbnail img {
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    border-top-left-radius: 5px !important;
+    border-top-right-radius: 5px !important;
 }
 .top-nav-strip {
     height: 22px;

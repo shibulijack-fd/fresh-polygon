@@ -793,3 +793,13 @@ function submenu_save_meta_box_data( $post_id ) {
 	// Update the meta field in the database.
 	update_post_meta( $post_id, '_submenu_key', $my_data );
 }
+//Infinite scroll
+add_theme_support( 'infinite-scroll', array(
+    'type'           => 'scroll',
+    'footer_widgets' => false,
+    'footer'		=> false,
+    'container'      => 'content',
+    'wrapper'        => false,
+    'render'         => false,
+    'posts_per_page' => false,
+) );

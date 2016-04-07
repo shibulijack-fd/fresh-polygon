@@ -19,6 +19,7 @@ get_header(); ?>
  <div class="banner" id="index">
     </div>
 <div class="l-page fc">
+
 	<div id="primary" class="content-area">
 		<div id="content" class="site-content" role="main">
 		<?php if ( have_posts() ) : ?>
@@ -27,8 +28,6 @@ get_header(); ?>
 			<?php while ( have_posts() ) : the_post(); ?>
 				<?php get_template_part( 'content', get_post_format() ); ?>
 			<?php endwhile; ?>
-
-			<?php twentythirteen_paging_nav(); ?>
 
 		<?php else : ?>
 			<?php get_template_part( 'content', 'none' ); ?>
@@ -39,3 +38,8 @@ get_header(); ?>
 </div>
 <?php #get_sidebar(); ?>
 <?php get_footer(); ?>
+<style>
+body {
+	background: #e6e6e6;
+}
+</style>

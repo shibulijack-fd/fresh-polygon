@@ -17,13 +17,16 @@
 		<div class="entry-thumbnail">
 			<?php the_post_thumbnail(); ?>
 		</div>
+		<?php else : ?>
+		<div class="empty-thumbnail">
+		</div>
 		<?php endif; ?>
 
 		<?php if ( is_single() ) : ?>
 		<h1 class="entry-title text-center"><?php the_title(); ?></h1>
 		<h3 class="top-space-small text-center">Written by <a href="<?php the_author_link(); ?>"><?php the_author(); ?></a> on <?php the_time('F j, Y'); ?></h3>
 		<?php else : ?>
-		<h3 class="banner-description"><a href="<?php the_author_link(); ?>"><?php the_author(); ?></a> about <?php echo human_time_diff( get_the_time('U'), current_time('timestamp') ) . ' ago'; ?></h3>
+		<h3 class="entry-description"><a href="<?php the_author_link(); ?>"><?php the_author(); ?></a> about <?php echo human_time_diff( get_the_time('U'), current_time('timestamp') ) . ' ago'; ?></h3>
 		<h1 class="entry-title text-center">
 			<a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
 		</h1>

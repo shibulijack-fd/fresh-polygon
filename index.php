@@ -15,8 +15,13 @@
  */
 
 get_header(); ?>
-
+<?php query_posts('offset=4'); ?>
  <div class="banner" id="index">
+ <?php
+ if( function_exists('fa_display_slider') ){
+     fa_display_slider( 7585 );
+ }
+ ?>
     </div>
 <div class="l-page fc">
 
@@ -41,5 +46,18 @@ get_header(); ?>
 <style>
 body {
 	background: #e6e6e6;
+}
+.banner {
+	padding-top: 100px;
+	padding-bottom: 0;
+    margin-bottom: 30px;
+    -webkit-box-shadow: 0 0 15px -2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 0 15px -2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 15px -2px rgba(0, 0, 0, 0.2);
+}
+.fa_slider_simple.default .fa_slide_content h2 {
+	font-size: 18px;
+	font-weight: 500;
+	text-shadow: none;
 }
 </style>

@@ -7109,6 +7109,11 @@ header {
 font-weight: 400;
 text-align: justify;
 }
+#content blockquote p {
+padding-left: 30px;
+padding-top: 20px;
+font-style: italic;
+}
 #content img {
     display: block;
     margin: 20px auto;
@@ -7163,8 +7168,15 @@ text-align: justify;
     border: none !important;
     border-radius: 0 !important;
     margin: 0 !important;
-    border-top-left-radius: 5px !important;
-    border-top-right-radius: 5px !important;
+    border-top-left-radius: 3px !important;
+    border-top-right-radius: 3px !important;
+}
+.thumbnail .empty-thumbnail {
+    background: url(images/thumbnail-cover.jpg);
+    height: 190px;
+    margin: 5px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 .top-nav-strip {
     height: 22px;
@@ -11409,7 +11421,7 @@ img[src*="insight.adsrvr.org"] {
 }
 .quote {
     background: url(images/quote.png) no-repeat;
-    height: 54px;
+    /*height: 54px;*/
     display: block;
     background-size: 45px;
 }

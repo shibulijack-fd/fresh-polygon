@@ -24,24 +24,28 @@ get_header(); ?>
  ?>
     </div>
 <div class="l-page fc">
+	<div class="fg-9 fc">
+		<div id="primary" class="content-area">
+			<div id="content" class="site-content" role="main">
+				<?php if ( have_posts() ) : ?>
 
-	<div id="primary" class="content-area">
-		<div id="content" class="site-content" role="main">
-		<?php if ( have_posts() ) : ?>
+					<?php /* The loop */ ?>
+					<?php while ( have_posts() ) : the_post(); ?>
+						<?php get_template_part( 'content', get_post_format() ); ?>
+					<?php endwhile; ?>
 
-			<?php /* The loop */ ?>
-			<?php while ( have_posts() ) : the_post(); ?>
-				<?php get_template_part( 'content', get_post_format() ); ?>
-			<?php endwhile; ?>
+				<?php else : ?>
+					<?php get_template_part( 'content', 'none' ); ?>
+				<?php endif; ?>
 
-		<?php else : ?>
-			<?php get_template_part( 'content', 'none' ); ?>
-		<?php endif; ?>
-
-		</div><!-- #content -->
-	</div><!-- #primary -->
+			</div><!-- #content -->
+		</div><!-- #primary -->
+	</div>
+	<div class="fg-3 omega fc" id="sidebar">
+	    <?php get_sidebar(); ?>
+	</div>
 </div>
-<?php #get_sidebar(); ?>
+
 <?php get_footer(); ?>
 <style>
 body {

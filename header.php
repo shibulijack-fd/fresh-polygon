@@ -44,7 +44,7 @@
 				</div><!-- #l-page -->
 			</div><!-- #navbar -->
 			<div class="header fd-sticky fc">
-				<div class="sticky-wrapper" style="height: 58px;"><section class="fd-home-sticky">
+				<section class="fd-home-sticky">
 					<div class="l-page"> 
 						<a href="<?php echo get_site_url(); ?>" class="fd-logo"></a>
 						<button class="show-in-mobile menu-icon"></button>
@@ -56,7 +56,7 @@
 							<?php wp_nav_menu( array( 'theme_location' => 'secondary', 'menu_class' => 'nav-menu', 'menu_id' => 'main-menu' , 'walker' => $walker) ); ?>
 						</nav>
 					</div>
-				</section></div>
+				</section>
 			</div>
 
 			

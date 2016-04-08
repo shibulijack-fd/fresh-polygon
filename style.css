@@ -7132,13 +7132,13 @@ font-style: italic;
     font-weight: 500;
 }
 .thumbnail {
-    width: 40%;
+    width: 48%;
     float: left;
-    margin: 10px 5%;
+    margin: 10px 1%;
     background: #fff;
     /*padding: 1%;*/
     border-radius: 5px;
-    height: 300px;
+    /*height: 300px;*/
 }
 .thumbnail h1 {
     font-size: 18px;
@@ -7173,10 +7173,21 @@ font-style: italic;
 }
 .thumbnail .empty-thumbnail {
     background: url(images/thumbnail-cover.jpg);
-    height: 190px;
+    height: 170px;
     margin: 5px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+}
+.widget {
+    padding-top: 0 !important;
+}
+.widget a, .widget a:visited {
+    color: #666;
+    line-height: 28px;
+}
+.widget-title {
+        font-size: 18px;
+    font-weight: 500;
 }
 .top-nav-strip {
     height: 22px;

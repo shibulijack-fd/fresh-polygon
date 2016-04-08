@@ -2740,6 +2740,10 @@ function getParameterByName(name){
 		if ($(window).width() >= 980){
 			$('.fd-tour-sticky,.fd-home-sticky,.fs-tour-sticky,.fd-page-sticky').waypoint('sticky');
 			$('.tour-features-strip').waypoint('sticky');
+          $('.sidebar-inner').waypoint('sticky', {
+            wrapper: '<div class="sticky-sidebar-wrapper" />',
+            offset: "65px"
+          });
 			$('.menu-item-has-children .sub-menu').on('mouseenter mouseleave', function(){
         		$(this).siblings('.menu-item').toggleClass('active');
     		});
